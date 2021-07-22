@@ -1,0 +1,100 @@
+Level 10 -> Level 11
+Base64 is an encoded foramt that uses alphabets and number to encode the data text. 
+Command: cat data.txt | base64 -d 
+
+username for level 11 : bandit11
+password for level 11 : IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+
+Level 11 -> Level 12
+Rot 13 replaces A-Z with N-Z,A-M and a-z with n-z,a-m
+Command: cat data.txt | tr '[A-Za-z]' '[N-ZA-Mn-za-m]'
+
+username for level 12 : bandit12
+password for level 12 : 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
+
+Level 12 -> Level 13
+The files are basically compressed using bzip2, gzip and tar. use man [gzip, bzip2, tar] or [gzip, bzip2, tar] --help to know about the commands
+Use file command to check the format of the data and keep on decompressing till you get the ASCII text
+
+username for level 13 : bandit13
+password for level 13 : 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+
+Level 13 -> Level 14
+The password is located in etc/bandit_pass/bandit14. 
+So you need to connect using the ssh private key in bandit13 and the host is localhost
+command: ssh -i sshkey.private bandit14@localhost
+use cat command and get the password
+
+username for level 14 : bandit14
+password for level 14 : 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+
+Level 14 -> Level 15
+command for connecting the localhost: telnet localhost 30000
+enter the password of bandit14 which is available in /etc/bandit_pass/bandit<levelnumber>
+
+username for level 15 : bandit15
+password for level 15 : BfMYroe26WYalil77FoDi9qh59eK5xNr
+
+Level 15 -> Level 16
+command: openssl s_client -connect localhost:30001
+enter the password of bandit15 which is available in /etc/bandit_pass/bandit<levelnumber>
+
+alternative command: cat /etc/bandit_pass/bandit15 | openssl s_client -connect localhost:30001 -quiet
+
+username for level 16 : bandit16
+password for level 16 : cluFn7wTiGryunymYOu4RcffSxQluehd
+
+Level 16 -> Level 17
+NMAP Command: nmap -p <port ranges> <target specification> [nmap -p 31000-32000 localhost]
+
+use cat /etc/bandit_pass/bandit16 | openssl s_client -connect localhost:<ports> -quiet for all the ports
+Finally, at port 31790, the output we received for cat /etc/bandit_pass/bandit16 | openssl s_client -connect localhost:31790 -quiet is a RSA private key.
+store it in the temp folder as a file [sshkey.private]and check the private key using cat command
+connect to bandit 17 using command: ssh -i sshkey.private bandit17@localhost
+
+change the permissions using chmod 400 file name if you get any warning regarding the permissions
+after reconnecting search for password in /etc/bandit_pass/bandit17
+
+username for level 17 : bandit17
+password for level 17 : xLYVMN9WE5zQ5vHacb0sZEVqbrp7nBTn
+
+Level 17 -> Level 18
+command: diff -i password.new password.old
+
+username for level 18 : bandit18
+password for level 18 : kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+
+Level 18 -> Level 19
+To validate if readme file exist in the home directory, we will append ls -al after ssh bandit18@bandit.labs.overthewire.org -p 2220 or ssh bandit18@localhost to display all the files including hidden files in the home directory.
+ssh bandit18@bandit.labs.overthewire.org -p 2220 ls -la command.
+Indeed, after entering the password, the readme file is found at the home directory.
+Since bandit19‘s password is stored in readme file, thus append cat readme after ssh bandit18@bandit.labs.overthewire.org -p 2220 to login and display the contents of readme file.
+command: ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme 
+
+Using “Pseudo Terminal”
+To prevent being automatically logout, we would force a “Pseudo Terminal” to open.
+With “Pseudo Terminal”, it emulates terminal hardware, handling input and output, the same way a physical device would so that the software connected is unaware that it is not a real device attached.
+To understand what is “Pseudo Terminal”, read https://renenyffenegger.ch/notes/development/misc/pseudo-terminal
+To create “Pseudo Terminal”, we would use -t option in our ssh command to force pseudo-tty allocation.
+command: ssh bandit18@bandit.labs.overthewire.org -p 2220 -t /bin/sh command and enter bandit18's password to login.
+Here /bin/sh, is the shell I used in our “Pseudo Terminal”.
+After entering bandit18's password, we have a shell that could be use to interact with the server. Running cat readme command will get bandit19‘s password.
+
+username for level 19 : bandit19
+password for level 19 : IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+
+Level 19 -> Level 20
+Setuid is a Linux file permission setting that allows a user to execute the file or program with the permission of the owner of that file. This is primarily used to elevate the privileges of the current user.
+If a file is “setuid” and is owned by the user “root”, then a user that has the ability to execute that program, will do so as the user “root” instead of themselves.
+
+ls -l -> displays the files available in the directory
+run the file as an executable 
+Displays Run a command as another user.
+
+./bandit20-do whoami outputs as bandit20
+so we access the password in etc using this
+command: ./bandit20-do cat /etc/bandit_pass/bandit20
+
+
+username for level 20 : bandit20
+password for level 20 : GbKksEFF4yrVs6il55v6gwY5aVje5f0j
